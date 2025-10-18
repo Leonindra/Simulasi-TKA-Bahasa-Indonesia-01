@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulasi TKA Bahasa Indonesia</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .instructions {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            box-shadow: var(--shadow);
+            border-left: 5px solid var(--secondary);
+        }
+        
+        .instructions h2 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .instructions ul {
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+        }
+        
+        .timer-container {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .timer {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent);
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background-color: var(--secondary);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .question-container {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+        
+        .question-number {
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .question-text {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+        
+        .options {
+            margin-left: 20px;
+        }
+        
+        .option {
+            margin-bottom: 12px;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .option:hover {
+            background-color: #f0f8ff;
+        }
+        
+        .option input {
+            margin-right: 10px;
+        }
+        
+        .reading-passage {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .passage-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-secondary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #1a252f;
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #27ae60;
+        }
+        
+        .btn-disabled {
+            background-color: #bdc3c7;
+            color: #7f8c8d;
+            cursor: not-allowed;
+        }
+        
+        .result-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-top: 30px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            display: none;
+        }
+        
+        .score-display {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--secondary);
+            margin: 20px 0;
+        }
+        
+        .score-text {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        
+        .explanation {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: left;
+            display: none;
+        }
+        
+        .explanation-title {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .correct-answer {
+            color: var(--success);
+            font-weight: bold;
+        }
+        
+        .user-correct {
+            background-color: #d4edda;
+            border-left: 4px solid var(--success);
+        }
+        
+        .user-incorrect {
+            background-color: #f8d7da;
+            border-left: 4px solid var(--accent);
+        }
+        
+        .validation-message {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--warning);
+            display: none;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .question-container {
+                padding: 15px;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Simulasi TKA Bahasa Indonesia</h1>
+            <p class="subtitle">Tes Kemampuan Akademik - 25 Soal Tingkat Sulit</p>
+        </header>
+        
+        <section class="instructions">
+            <h2>Petunjuk Pengerjaan</h2>
+            <ul>
+                <li>Simulasi ini terdiri dari <strong>25 soal pilihan ganda</strong> dengan tingkat kesulitan tinggi.</li>
+                <li>Waktu pengerjaan: <strong>45 menit</strong>.</li>
+                <li>Pilihlah jawaban yang paling tepat dengan mengklik opsi yang tersedia.</li>
+                <li>Gunakan tombol <strong>"Soal Sebelumnya"</strong> dan <strong>"Soal Berikutnya"</strong> untuk berpindah antar soal.</li>
+                <li>Anda <strong>harus menjawab semua soal</strong> sebelum dapat mengumpulkan dan melihat hasil.</li>
+                <li>Setelah selesai, klik tombol <strong>"Kumpulkan & Lihat Nilai"</strong> untuk melihat hasil dan pembahasan.</li>
+                <li>Nilai akan dihitung secara otomatis dengan rumus: <strong>(Jumlah Benar / 25) × 100</strong>.</li>
+            </ul>
+        </section>
+        
+        <div class="validation-message" id="validation-message">
+            Anda harus menjawab semua soal sebelum dapat melihat hasil. Silakan periksa kembali jawaban Anda.
+        </div>
+        
+        <div class="timer-container">
+            <div>
+                <strong>Waktu Tersisa:</strong>
+                <span class="timer" id="timer">45:00</span>
+            </div>
+            <div>
+                <strong>Soal:</strong>
+                <span id="current-question">1</span> / <span id="total-questions">25</span>
+            </div>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress" id="progress-bar"></div>
+        </div>
+        
+        <div id="questions-container">
+            <!-- Soal akan dimuat di sini melalui JavaScript -->
+        </div>
+        
+        <div class="navigation">
+            <button id="prev-btn" class="btn-secondary">Soal Sebelumnya</button>
+            <button id="next-btn" class="btn-primary">Soal Berikutnya</button>
+            <button id="submit-btn" class="btn-success">Kumpulkan & Lihat Nilai</button>
+        </div>
+        
+        <div class="result-container" id="result-container">
+            <h2>Hasil Simulasi TKA Bahasa Indonesia</h2>
+            <div class="score-display" id="score-display">0</div>
+            <div class="score-text" id="score-text"></div>
+            <button id="show-explanation" class="btn-primary">Lihat Pembahasan</button>
+        </div>
+        
+        <div class="explanation" id="explanation">
+            <h3 class="explanation-title">Pembahasan Jawaban</h3>
+            <div id="explanation-content">
+                <!-- Pembahasan akan dimuat di sini -->
+            </div>
+        </div>
+        
+        <footer>
+            <p>Simulasi TKA Bahasa Indonesia &copy; 2023 - Dirancang untuk persiapan ujian seleksi masuk PTN</p>
+        </footer>
+    </div>
+
+    <script>
+        // Data soal dan jawaban
+        const questions = [
+            {
+                passage: `
+                    <div class="reading-passage">
+                        <div class="passage-title">Bacaan 1 (Untuk soal nomor 1-6)</div>
+                        <p><strong>Teks Esai Ilmiah Populer</strong></p>
+                        <p>(1) Disrupsi digital telah melanda berbagai sektor, tak terkecuali dunia perbukuan. (2) Kemunculan e-book dan platform audiobook kerap dinilai sebagai ancaman eksistensial bagi buku cetak. (3) Namun, narasi pesimistis ini mengabaikan fakta bahwa medium bukanlah entitas yang bersifat nol-sum. (4) Sejarah membuktikan, penemuan radio tidak serta-merta memusnahkan koran, begitu pula kehadiran televisi tidak membunuh radio. (5) Masing-masing medium menemukan ceruk dan fungsi barunya dalam ekosistem media.</p>
+                        <p>(6) Buku cetak dan buku digital sejatinya memiliki nilai fungsi dan pengalaman yang berbeda. (7) Buku digital menawarkan kepraktisan, kemudahan akses, dan kemampuan pencarian yang superior. (8) Sebaliknya, buku cetak menawarkan pengalaman sensorik yang tak tergantikan: aroma kertas, tekstur sampul, dan kenangan fisik yang melekat padanya. (9) Buku cetak juga meminimalkan distraksi, sehingga pembaca dapat menyelami konten dengan lebih immersif.</p>
+                        <p>(10) Alih-alih saling menggantikan, kedua medium ini justru dapat bersinergi. (11) Pembaca dapat memanfaatkan buku digital untuk kepentingan eksplorasi awal atau membaca di perjalanan, sementara buku cetak dipilih untuk karya-karya yang ingin dikoleksi atau dibaca secara mendalam. (12) Dengan demikian, masa depan perbukuan bukanlah tentang kematian salah satu medium, melainkan tentang koeksistensi dan kolaborasi di mana pembaca memiliki kedaulatan penuh untuk memilih medium yang paling sesuai dengan kebutuhannya.</p>
+                    </div>
+                `,
+                question: "Gagasan utama Bacaan 1 adalah...",
+                options: [
+                    "Keunggulan buku digital atas buku cetak.",
+                    "Ancaman disrupsi digital terhadap buku cetak.",
+                    "Koeksistensi buku cetak dan digital di masa depan.",
+                    "Perbandingan pengalaman membaca buku cetak dan digital.",
+                    "Sejarah hubungan antar-medium yang saling menggantikan."
+                ],
+                correctAnswer: 2, // Index 2 = "Koeksistensi buku cetak dan digital di masa depan."
+                explanation: "Jawaban C paling tepat karena merangkum keseluruhan isi paragraf. Paragraf dimulai dengan gagasan pembangunan berkelanjutan, lalu mengkritik implementasinya yang keliru, dan diakhiri dengan solusi, yaitu perlunya pergeseran paradigma. Pilihan B hanya mewakili sebagian isi paragraf (kritik), bukan ide pokok keseluruhan."
+            },
+            {
+                passage: "",
+                question: "Makna frasa 'entitas yang bersifat nol-sum' pada kalimat (3) paling tepat adalah...",
+                options: [
+                    "Entitas yang saling bekerja sama.",
+                    "Entitas yang memiliki nilai tetap.",
+                    "Entitas yang keuntungan satu pihak harus mengorbankan pihak lain.",
+                    "Entitas yang dapat bertransformasi.",
+                    "Entitas yang tidak saling terpengaruh."
+                ],
+                correctAnswer: 2,
+                explanation: "'Nol-sum' dalam teori game berarti satu pihak menang, pihak lain pasti kalah. Ini sesuai dengan konteks ancaman yang saling menggantikan."
+            },
+            {
+                passage: "",
+                question: "Fungsi kalimat (5) dalam paragraf pertama adalah...",
+                options: [
+                    "Menyimpulkan paragraf pertama.",
+                    "Memberikan contoh untuk kalimat (4).",
+                    "Memperkuat argumen dalam kalimat (3) dan (4) dengan generalisasi.",
+                    "Menjadi kalimat topik paragraf.",
+                    "Menyatakan sebab-akibat."
+                ],
+                correctAnswer: 2,
+                explanation: "Kalimat (5) adalah generalisasi dari contoh-contoh di kalimat (4) yang mendukung pernyataan di kalimat (3) bahwa medium tidak saling memusnahkan."
+            },
+            {
+                passage: "",
+                question: "Berdasarkan teks, pernyataan manakah yang PALING TEPAT mengenai buku cetak?",
+                options: [
+                    "Hanya berguna untuk koleksi saja.",
+                    "Membantu pembaca untuk fokus tanpa gangguan.",
+                    "Memiliki kemampuan pencarian yang lebih baik.",
+                    "Akan punah dalam waktu dekat.",
+                    "Lebih praktis daripada buku digital."
+                ],
+                correctAnswer: 1,
+                explanation: "Ini sesuai dengan pernyataan di kalimat (9): '...meminimalkan distraksi, sehingga pembaca dapat menyelami konten dengan lebih immersif.'"
+            },
+            {
+                passage: "",
+                question: "Jika penulis ingin menambahkan contoh untuk mendukung kalimat (11), manakah yang PALING RELEVAN?",
+                options: [
+                    "Data penjualan buku cetak yang terus meningkat.",
+                    "Seorang mahasiswa yang membeli novel favoritnya dalam bentuk cetak untuk koleksi, setelah membacanya versi digital dari perpustakaan online.",
+                    "Sejarah penemuan mesin cetak oleh Gutenberg.",
+                    "Sebuah penelitian yang menyatakan membaca dari layar menyebabkan kelelahan mata.",
+                    "Seorang ibu yang lebih memilih buku cerita cetak untuk anaknya karena khawatir terhadap radiasi gadget."
+                ],
+                correctAnswer: 1,
+                explanation: "Opsi ini secara langsung menggambarkan sinergi antara buku digital (untuk eksplorasi) dan buku cetak (untuk koleksi) seperti pada kalimat (11)."
+            },
+            {
+                passage: "",
+                question: "Simpulan manakah yang paling didukung oleh teks?",
+                options: [
+                    "Disrupsi digital harus dihadapi dengan menolak kehadiran buku digital.",
+                    "Pengalaman sensorik adalah satu-satunya keunggulan buku cetak.",
+                    "Pembaca diuntungkan dengan adanya pilihan medium yang beragam.",
+                    "Masa depan industri perbukuan sangat suram.",
+                    "Buku digital pada akhirnya akan mendominasi seluruh pasar."
+                ],
+                correctAnswer: 2,
+                explanation: "Teks berargumen bahwa pemberdayaan pembaca dalam memilih medium adalah masa depan perbukuan (kalimat 12)."
+            },
+            {
+                passage: `
+                    <div class="reading-passage">
+                        <div class="passage-title">Bacaan 2 (Untuk soal nomor 7-12)</div>
+                        <p><strong>Teks Opini</strong></p>
+                        <p>(1) Pemberlakuan Pembatasan Kegiatan Masyarakat (PPKM) pada masa pandemi menuai pro dan kontra. (2) Di satu sisi, kebijakan ini dinilai crucial untuk memutus mata rantai penularan virus. (3) Di sisi lain, dampak ekonomi yang ditimbulkannya sungguh masif, terutama bagi para pekerja sektor informal dan UMKM yang aktivitas ekonominya sangat bergantung pada mobilitas fisik.</p>
+                        <p>(4) Pemerintah sejatinya terjebak dalam situasi "damned if you do, damned if you don't". (5) Membiarkan mobilitas tanpa kontrol berisiko menyebabkan lonjakan kasus yang dapat melumpuhkan sistem kesehatan. (6) Sebaliknya, memberlakukan lockdown ketat tanpa pengamanan sosial yang memadai berpotensi memicu gejolak sosial akibat tekanan ekonomi.</p>
+                        <p>(7) Oleh karena itu, kata kuncinya bukan lagi pada "perlukah PPKM", melainkan pada "bagaimana PPKM dilaksanakan". (8) Efektivitas PPKM sangat ditentukan oleh dua hal: transparansi data dan keadilan sosial. (9) Data testing dan tracing yang akurat dan transparan menjadi kompas untuk menetapkan level pembatasan yang tepat sasaran. (10) Sementara itu, bantuan sosial yang tepat sasaran, cepat, dan berkelanjutan adalah pilar penopang bagi mereka yang paling terdampak, agar kebijakan kesehatan tidak mengorbankan hak hidup layak masyarakat.</p>
+                        <p>(11) Tanpa kedua pilar tersebut, PPKM hanya akan menjadi ajang perpeloncoan massal yang mengikis kepercayaan publik dan pada ujungnya, gagal mencapai tujuannya.</p>
+                    </div>
+                `,
+                question: "Argumentasi utama penulis dalam teks opini tersebut adalah...",
+                options: [
+                    "Menolak keras kebijakan PPKM.",
+                    "Mendukung penuh kebijakan PPKM tanpa syarat.",
+                    "Menekankan pentingnya tata kelola PPKM yang baik.",
+                    "Membandingkan kelebihan dan kekurangan PPKM.",
+                    "Menjelaskan dampak ekonomi dari PPKM."
+                ],
+                correctAnswer: 2,
+                explanation: "Penulis tidak menolak atau mendukung mutlak, tetapi menekankan pada 'bagaimana PPKM dilaksanakan' (kalimat 7) dengan dua pilar (kalimat 8)."
+            },
+            {
+                passage: "",
+                question: "Berdasarkan teks, mengapa pemerintah disebut 'terjebak' (kalimat 4)?",
+                options: [
+                    "Karena pemerintah tidak memiliki data yang akurat.",
+                    "Karena setiap keputusan yang diambil memiliki konsekuensi negatif.",
+                    "Karena pemerintah tidak konsisten dalam menjalankan kebijakan.",
+                    "Karena masyarakat tidak patuh pada aturan.",
+                    "Karena pandemi adalah situasi yang tidak terduga."
+                ],
+                correctAnswer: 1,
+                explanation: "Ini adalah inti dari idiom 'damned if you do, damned if you don't', yang dijelaskan lebih lanjut pada kalimat (5) dan (6)."
+            },
+            {
+                passage: "",
+                question: "Kalimat (11) berfungsi sebagai...",
+                options: [
+                    "Pernyataan umum.",
+                    "Penegasan ulang dan peringatan.",
+                    "Ajakan untuk bertindak.",
+                    "Penyimpulan sementara.",
+                    "Solusi alternatif."
+                ],
+                correctAnswer: 1,
+                explanation: "Kalimat (11) menegaskan kembali konsekuensi fatal jika dua pilar (data & keadilan) diabaikan, sekaligus berfungsi sebagai peringatan."
+            },
+            {
+                passage: "",
+                question: "Jika penulis ingin memperkuat argumennya, data manakah yang PALING RELEVAN untuk ditambahkan?",
+                options: [
+                    "Data jumlah kasus positif COVID-19 di seluruh dunia.",
+                    "Data selisih penerimaan bantuan sosial dengan jumlah keluarga pra-sejahtera yang terdampak PPKM.",
+                    "Data jumlah tenaga kesehatan yang meninggal selama pandemi.",
+                    "Data pertumbuhan ekonomi nasional sebelum pandemi.",
+                    "Data kepatuhan masyarakat dalam memakai masker."
+                ],
+                correctAnswer: 1,
+                explanation: "Data ini langsung terkait dengan pilar 'keadilan sosial' dan 'bantuan sosial yang tepat sasaran' yang menjadi argumen penulis."
+            },
+            {
+                passage: "",
+                question: "Istilah 'crucial' pada kalimat (2) dapat diganti dengan kata berikut, KECUALI...",
+                options: [
+                    "Penting",
+                    "Krusial",
+                    "Kritikal",
+                    "Sepele",
+                    "Vital"
+                ],
+                correctAnswer: 3,
+                explanation: "'Crucial' berarti sangat penting/kritis. 'Sepele' adalah antonimnya."
+            },
+            {
+                passage: "",
+                question: "Apa implikasi dari 'pengamanan sosial yang tidak memadai' seperti yang disebutkan dalam kalimat (6)?",
+                options: [
+                    "Meningkatnya kepatuhan masyarakat terhadap PPKM.",
+                    "Potensi terjadinya kerusuhan atau protes sosial.",
+                    "Membaiknya sistem kesehatan nasional.",
+                    "Turunnya angka penularan virus.",
+                    "Tercapainya herd immunity dengan cepat."
+                ],
+                correctAnswer: 1,
+                explanation: "Hal ini secara eksplisit dinyatakan dalam kalimat (6): '...berpotensi memicu gejolak sosial...'"
+            },
+            {
+                passage: `
+                    <div class="reading-passage">
+                        <div class="passage-title">Soal Nomor 13-15 (Menyunting Teks)</div>
+                        <p><strong>Perhatikan teks berikut untuk disunting!</strong></p>
+                        <p>Teks: "Dalam rangka memperingati hari pendidikan nasional, sekolah kami akan mengadakan lomba debat. Lomba ini terbuka untuk seluruh siswa-siswi kelas 10 sampai 12. Pendaftaran dapat dilakukan di ruang OSIS paling lambat tanggal 25 April. Kepada masing-masing peserta diharapkan mempersiapkan diri dengan baik."</p>
+                    </div>
+                `,
+                question: "Kesalahan penggunaan ejaan terdapat pada kata...",
+                options: [
+                    "pendidikan",
+                    "nasional,",
+                    "OSIS",
+                    "April",
+                    "Kepada"
+                ],
+                correctAnswer: 1,
+                explanation: "'Nasional' dalam 'Hari Pendidikan Nasional' adalah nama peringatan, sehingga harus ditulis dengan huruf kapital: `Nasional`."
+            },
+            {
+                passage: "",
+                question: "Kesalahan struktur kalimat terdapat pada frasa...",
+                options: [
+                    "lomba debat",
+                    "seluruh siswa-siswi",
+                    "di ruang OSIS",
+                    "Kepada masing-masing peserta diharapkan",
+                    "mempersiapkan diri dengan baik"
+                ],
+                correctAnswer: 3,
+                explanation: "Frasa 'Kepada... diharapkan' adalah struktur yang kaku dan tidak efektif. Subjek kalimat seharusnya 'peserta'."
+            },
+            {
+                passage: "",
+                question: "Perbaikan yang tepat untuk kalimat yang salah pada soal nomor 14 adalah...",
+                options: [
+                    "'Kepada masing-masing peserta, diharapkan mempersiapkan diri dengan baik.'",
+                    "'Masing-masing peserta kepada mereka diharapkan mempersiapkan diri dengan baik.'",
+                    "'Masing-masing peserta diharapkan mempersiapkan diri dengan baik.'",
+                    "'Diharapkan kepada masing-masing peserta agar mempersiapkan diri dengan baik.'",
+                    "'Kepada masing-masing peserta, harap mempersiapkan diri dengan baik.'"
+                ],
+                correctAnswer: 2,
+                explanation: "Kalimat ini sudah jelas, efektif, dan subjeknya ('peserta') berada di awal."
+            },
+            {
+                passage: `
+                    <div class="reading-passage">
+                        <div class="passage-title">Soal Nomor 16-18 (Penalaran Kebahasaan)</div>
+                    </div>
+                `,
+                question: "Perhatikan kalimat berikut: 'Tim itu tidak hanya berhasil memenangkan kejuaraan, _____ juga memecahkan rekor yang telah bertahan selama satu dekade.' Kata penghubung (konjungsi) yang PALING TEPAT untuk melengkapi kalimat tersebut adalah...",
+                options: [
+                    "atau",
+                    "tetapi",
+                    "melainkan",
+                    "sedangkan",
+                    "lalu"
+                ],
+                correctAnswer: 2,
+                explanation: "Pola 'tidak hanya..., melainkan juga...' adalah pola baku yang tepat untuk menyambungkan dua hal yang kedua nya melanjutkan dan menguatkan yang pertama."
+            },
+            {
+                passage: "",
+                question: "Kalimat manakah yang menggunakan diksi yang PALING TEPAT dan EFEKTIF?",
+                options: [
+                    "Perusahaan itu melakukan restrukturisasi untuk meningkatkan efisiensi operasional.",
+                    "Perusahaan itu bikin perubahan supaya bisa jalan lebih efektif.",
+                    "Perusahaan tersebut membuat perubahan besar-besaran agar kinerjanya lebih bagus.",
+                    "Perusahaan itu mengadakan perombakan untuk menaikkan daya guna operasional.",
+                    "Perusahaan itu melakukan perubahan struktur untuk meningkatkan efektivitas kerja."
+                ],
+                correctAnswer: 0,
+                explanation: "Kalimat ini menggunakan diksi formal dan tepat ('restrukturisasi', 'efisiensi operasional') dan strukturnya efektif."
+            },
+            {
+                passage: "",
+                question: "Penulisan kata serapan yang tepat terdapat dalam kalimat...",
+                options: [
+                    "Kebijakan itu menuai kritik dari berbagai pihak.",
+                    "Sistem zonasi sekolah menjadi topik hangat di masyarakat.",
+                    "Dia adalah seorang praktisi di bidang IT yang handal.",
+                    "Ilmuan tersebut menemukan formula baru.",
+                    "Jumlah passien di rumah sakit semakin bertambah."
+                ],
+                correctAnswer: 0,
+                explanation: "'Kritik' adalah kata serapan yang penulisannya sudah tepat. Opsi lain: B (seharusnya 'hot'), C (seharusnya 'praktisi'), D (seharusnya 'ilmuwan'), E (seharusnya 'pasien')."
+            },
+            {
+                passage: `
+                    <div class="reading-passage">
+                        <div class="passage-title">Soal Nomor 19-20 (Literasi Sastra: Puisi)</div>
+                        <p><strong>Bacalah puisi berikut dengan saksama!</strong></p>
+                        <p><strong>"Pada Sebuah Bukit" oleh Sapardi Djoko Damono</strong><br>
+                        sunyi di sini: hanya angin<br>
+                        yang bermain dengan daun-daun<br>
+                        pinus; hanya desau<br>
+                        yang lirih terdengar; hanya<br>
+                        kicau burung yang datang dan pergi<br>
+                        dari dahan yang satu ke dahan lain;<br>
+                        hanya langit yang biru dan awan<br>
+                        yang putih; hanya kamu<br>
+                        yang kuingat di sini.</p>
+                    </div>
+                `,
+                question: "Diksi yang paling menonjol untuk menggambarkan suasana dalam puisi tersebut adalah...",
+                options: [
+                    "angin, daun, burung",
+                    "sunyi, lirih, datang dan pergi",
+                    "biru, putih, pinus",
+                    "bermain, kicau, ingat",
+                    "dahan, langit, awan"
+                ],
+                correctAnswer: 1,
+                explanation: "Kata-kata ini secara langsung membangun suasana hening, sepi, dan tenang yang menjadi inti puisi."
+            },
+            {
+                passage: "",
+                question: "Makna 'kamu' dalam puisi tersebut kemungkinan besar melambangkan...",
+                options: [
+                    "Kekasih atau seseorang yang sangat dirindukan.",
+                    "Seorang musuh yang tidak bisa dilupakan.",
+                    "Masa lalu yang menyedihkan.",
+                    "Harapan untuk masa depan.",
+                    "Ketenangan dan kedamaian batin."
+                ],
+                correctAnswer: 0,
+                explanation: "Dalam konteks puisi lirik Sapardi, 'kamu' biasanya merujuk pada sosok yang dirindukan dalam keheningan dan kesendirian."
+            },
+            {
+                passage: `
+                    <div class="reading-passage">
+                        <div class="passage-title">Soal Nomor 21-25 (Pemahaman Bacaan: Teks Kompleks)</div>
+                        <p><strong>Bacalah teks berikut dengan cermat!</strong></p>
+                        <p><strong>Fenomena Shifting Baseline Syndrome dalam Konservasi Laut</strong></p>
+                        <p>Konsep "Shifting Baseline Syndrome" (SBS) pertama kali diperkenalkan oleh ilmuwan kelautan Daniel Pauly pada tahun 1995. SBS menggambarkan fenomena di mana setiap generasi baru menerima kondisi alam tertentu sebagai "normal" atau "baseline" yang baru, tanpa menyadari betapa kaya dan beragamnya ekosistem tersebut di masa lalu. Misalnya, seorang kakek nelayan mungkin ingat betapa melimpahnya ikan kakap di karang tertentu pada masa mudanya. Anaknya, yang mulai melaut pada 1980-an, sudah menerima kondisi karang yang sedikit berkurang ikannya sebagai hal yang wajar. Cucunya, yang menjadi nelayan hari ini, mungkin menganggap karang yang nyaris gundul dan hanya dihuni ikan-ikan kecil sebagai "normal" karena itulah satu-satunya kondisi yang pernah dia alami.</p>
+                        <p>SBS berbahaya karena membuat kita kehilangan perspektif jangka panjang. Tanpa kesadaran akan kemunduran yang terjadi secara bertahap, hasrat dan upaya untuk memulihkan ekosistem ke kondisi yang lebih prima menjadi lemah. Kita menjadi puas dengan kondisi yang sebenarnya sudah sangat rusak. Dalam konteks konservasi, SBS merupakan musuh yang tak terlihat. Upaya restorasi terumbu karang, misalnya, bisa dianggap sukses hanya karena mampu meningkatkan tutupan karang hidup dari 5% menjadi 10%. Padahal, beberapa dekade lalu, tutupan karang di tempat yang sama mungkin mencapai 80%. Tanpa pengetahuan tentang baseline historis ini, "kesuksesan" yang sesungguhnya sangat minimal itu dirayakan sebagai kemenangan besar.</p>
+                        <p>Memerangi SBS memerlukan pendekatan multidisipliner, termasuk dokumentasi ekologis yang cermat, pewarisan pengetahuan lokal (local knowledge) dari generasi tua, dan pendidikan lingkungan yang tidak hanya berfokus pada kondisi saat ini, tetapi juga pada sejarah ekologis suatu wilayah.</p>
+                    </div>
+                `,
+                question: "Apa inti dari Shifting Baseline Syndrome (SBS) menurut teks?",
+                options: [
+                    "Kemampuan untuk mengingat kondisi alam di masa lalu.",
+                    "Perubahan persepsi generasi terhadap kondisi 'normal' alam yang semakin menurun.",
+                    "Sindrom yang menyebabkan nelayan kehilangan memori.",
+                    "Upaya konservasi yang berhasil memulihkan ekosistem.",
+                    "Dokumentasi kondisi alam yang dilakukan secara turun-temurun."
+                ],
+                correctAnswer: 1,
+                explanation: "Ini adalah definisi inti SBS yang dijelaskan di paragraf pertama."
+            },
+            {
+                passage: "",
+                question: "Contoh manakah yang PALING TEPAT menggambarkan SBS berdasarkan teks?",
+                options: [
+                    "Seorang scientist yang mencatat penurunan populasi ikan secara statistik.",
+                    "Seorang anak yang menganggap sungai yang keruh dan berbau sebagai hal yang biasa, karena sejak lahir dia melihatnya seperti itu.",
+                    "Seorang kakek yang bercerita tentang hutan yang lebat kepada cucunya.",
+                    "Pemerintah yang menetapkan kuota penangkapan ikan.",
+                    "Sebuah LSM yang menanam mangrove di pesisir pantai."
+                ],
+                correctAnswer: 1,
+                explanation: "Contoh ini menggambarkan inti SBS: penerimaan kondisi yang telah terdegradasi sebagai sesuatu yang normal."
+            },
+            {
+                passage: "",
+                question: "Mengapa SBS disebut sebagai 'musuh yang tak terlihat' dalam konservasi?",
+                options: [
+                    "Karena sindrom ini hanya diderita oleh orang-orang tertentu.",
+                    "Karena sulit didiagnosis secara medis.",
+                    "Karena sindrom ini mengikis ambisi untuk memulihkan ekosistem ke kondisi yang lebih baik tanpa disadari.",
+                    "Karena tidak ada data yang mencatat fenomena ini.",
+                    "Karena SBS hanya terjadi di daerah terpencil."
+                ],
+                correctAnswer: 2,
+                explanation: "Hal ini dijelaskan di paragraf kedua: '...membuat kita kehilangan perspektif... hasrat dan upaya untuk memulihkan... menjadi lemah.'"
+            },
+            {
+                passage: "",
+                question: "Berdasarkan teks, upaya untuk memerangi SBS adalah sebagai berikut, KECUALI...",
+                options: [
+                    "Pendidikan lingkungan yang mencakup sejarah ekologis.",
+                    "Pewarisan pengetahuan dari generasi tua.",
+                    "Peningkatan kuota penangkapan ikan secara berkala.",
+                    "Dokumentasi ekologis yang cermat.",
+                    "Pendekatan multidisipliner."
+                ],
+                correctAnswer: 2,
+                explanation: "Peningkatan kuota penangkapan justru dapat memperparah degradasi ekosistem, bukan memerangi SBS. Opsi A, B, D, dan E disebutkan di paragraf terakhir."
+            },
+            {
+                passage: "",
+                question: "Simpulan yang paling sesuai dengan isi teks adalah...",
+                options: [
+                    "SBS adalah fenomena baru yang tidak perlu dikhawatirkan.",
+                    "Keberhasilan konservasi harus diukur berdasarkan kondisi saat ini.",
+                    "Kesadaran akan kondisi alam di masa lalu sangat penting untuk menetapkan tujuan konservasi yang ambisius.",
+                    "Generasi muda tidak peduli dengan lingkungan.",
+                    "Pengetahuan lokal tidak relevan lagi untuk konservasi modern."
+                ],
+                correctAnswer: 2,
+                explanation: "Ini adalah simpulan dari seluruh teks, yang menekankan pentingnya pengetahuan baseline historis untuk tujuan konservasi yang benar-benar bermakna."
+            }
+        ];
+
+        // Variabel global
+        let currentQuestion = 0;
+        let userAnswers = new Array(questions.length).fill(null);
+        let timer;
+        let timeLeft = 45 * 60; // 45 menit dalam detik
+
+        // Fungsi untuk menampilkan soal
+        function displayQuestion() {
+            const container = document.getElementById('questions-container');
+            const question = questions[currentQuestion];
+            
+            // Update progress bar
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+            
+            // Update nomor soal
+            document.getElementById('current-question').textContent = currentQuestion + 1;
+            
+            let html = `
+                <div class="question-container">
+                    <div class="question-number">
+                        <span>Soal ${currentQuestion + 1}</span>
+                    </div>
+            `;
+            
+            // Tambahkan bacaan jika ada
+            if (question.passage) {
+                html += question.passage;
+            }
+            
+            html += `
+                    <div class="question-text">${question.question}</div>
+                    <div class="options">
+            `;
+            
+            // Tambahkan opsi jawaban
+            question.options.forEach((option, index) => {
+                const isChecked = userAnswers[currentQuestion] === index ? 'checked' : '';
+                html += `
+                    <div class="option">
+                        <input type="radio" id="q${currentQuestion}o${index}" name="question${currentQuestion}" value="${index}" ${isChecked}>
+                        <label for="q${currentQuestion}o${index}">${String.fromCharCode(65 + index)}. ${option}</label>
+                    </div>
+                `;
+            });
+            
+            html += `
+                    </div>
+                </div>
+            `;
+            
+            container.innerHTML = html;
+            
+            // Tambahkan event listener untuk opsi
+            document.querySelectorAll(`input[name="question${currentQuestion}"]`).forEach(input => {
+                input.addEventListener('change', (e) => {
+                    userAnswers[currentQuestion] = parseInt(e.target.value);
+                    checkAllQuestionsAnswered();
+                });
+            });
+            
+            // Update status tombol navigasi
+            document.getElementById('prev-btn').disabled = currentQuestion === 0;
+        }
+
+        // Fungsi untuk memeriksa apakah semua soal telah dijawab
+        function checkAllQuestionsAnswered() {
+            const allAnswered = userAnswers.every(answer => answer !== null);
+            const submitBtn = document.getElementById('submit-btn');
+            
+            if (allAnswered) {
+                submitBtn.classList.remove('btn-disabled');
+                submitBtn.classList.add('btn-success');
+                submitBtn.disabled = false;
+            } else {
+                submitBtn.classList.remove('btn-success');
+                submitBtn.classList.add('btn-disabled');
+                submitBtn.disabled = true;
+            }
+            
+            return allAnswered;
+        }
+
+        // Fungsi untuk memulai timer
+        function startTimer() {
+            timer = setInterval(() => {
+                timeLeft--;
+                
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                
+                document.getElementById('timer').textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    submitQuiz();
+                }
+            }, 1000);
+        }
+
+        // Fungsi untuk mengumpulkan kuis dan menampilkan hasil
+        function submitQuiz() {
+            // Validasi apakah semua soal telah dijawab
+            if (!checkAllQuestionsAnswered()) {
+                document.getElementById('validation-message').style.display = 'block';
+                document.getElementById('validation-message').scrollIntoView({ behavior: 'smooth' });
+                return;
+            }
+            
+            clearInterval(timer);
+            
+            // Hitung skor
+            let correctCount = 0;
+            questions.forEach((question, index) => {
+                if (userAnswers[index] === question.correctAnswer) {
+                    correctCount++;
+                }
+            });
+            
+            const score = (correctCount / questions.length) * 100;
+            
+            // Tampilkan hasil
+            document.getElementById('score-display').textContent = Math.round(score);
+            document.getElementById('score-text').textContent = 
+                `Anda menjawab ${correctCount} dari ${questions.length} soal dengan benar.`;
+            
+            document.getElementById('result-container').style.display = 'block';
+            
+            // Scroll ke hasil
+            document.getElementById('result-container').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Fungsi untuk menampilkan pembahasan
+        function showExplanation() {
+            let html = '';
+            
+            questions.forEach((question, index) => {
+                const userAnswer = userAnswers[index];
+                const isCorrect = userAnswer === question.correctAnswer;
+                const answerClass = isCorrect ? 'user-correct' : 'user-incorrect';
+                
+                html += `
+                    <div class="question-container ${answerClass}">
+                        <div class="question-number">
+                            <span>Soal ${index + 1}</span>
+                            <span>${isCorrect ? '✓ Benar' : '✗ Salah'}</span>
+                        </div>
+                `;
+                
+                if (question.passage) {
+                    html += question.passage;
+                }
+                
+                html += `
+                        <div class="question-text">${question.question}</div>
+                        <div class="options">
+                `;
+                
+                question.options.forEach((option, optIndex) => {
+                    let optionClass = '';
+                    if (optIndex === question.correctAnswer) {
+                        optionClass = 'correct-answer';
+                    }
+                    
+                    html += `
+                        <div class="option">
+                            <span class="${optionClass}">${String.fromCharCode(65 + optIndex)}. ${option}</span>
+                            ${userAnswer === optIndex && !isCorrect ? '<span style="color: var(--accent); margin-left: 10px;">(Jawaban Anda)</span>' : ''}
+                        </div>
+                    `;
+                });
+                
+                html += `
+                        </div>
+                        <div class="explanation">
+                            <strong>Pembahasan:</strong> ${question.explanation}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('explanation-content').innerHTML = html;
+            document.getElementById('explanation').style.display = 'block';
+            
+            // Scroll ke pembahasan
+            document.getElementById('explanation').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Event listener saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', () => {
+            // Tampilkan soal pertama
+            displayQuestion();
+            
+            // Mulai timer
+            startTimer();
+            
+            // Inisialisasi status tombol submit
+            checkAllQuestionsAnswered();
+            
+            // Event listener untuk tombol navigasi
+            document.getElementById('prev-btn').addEventListener('click', () => {
+                if (currentQuestion > 0) {
+                    currentQuestion--;
+                    displayQuestion();
+                }
+            });
+            
+            document.getElementById('next-btn').addEventListener('click', () => {
+                if (currentQuestion < questions.length - 1) {
+                    currentQuestion++;
+                    displayQuestion();
+                }
+            });
+            
+            document.getElementById('submit-btn').addEventListener('click', submitQuiz);
+            
+            document.getElementById('show-explanation').addEventListener('click', showExplanation);
+        });
+    </script>
+</body>
+</html>
